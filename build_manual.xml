@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="DataAnalyser" default="makejar" basedir=".">
+  <property name="src.dir" value="src" />
+  <property name="build.dir" value="build" />
+  <property name="jar.dir" value="${build.dir}/jar" />
+  <property name="class.dir" value="${build.dir}/classes" />
+  <property name="lib.dir.log4j" value="../../external_libraries/log4j" />
+  <property name="lib.dir.args4j" value="../../external_libraries/args4j2" />
+  <property name="lib.dir.junit" value="../../external_libraries/junit" />
+  <property name="main-class" value="DataAnalyserMain" />
+
+  <path id="classpath">
+    <fileset dir="${lib.dir.log4j}" includes="**/*.jar" />
+    <fileset dir="${lib.dir.args4j}" includes="**/*.jar" />
+    <fileset dir="${lib.dir.junit}" includes="**/*.jar" />
+  </path>
+
+  <target name="clean" description="clean up old class files">
+    <delete dir="${class.dir}" />
+    <delete dir="${jar.dir}" />
+  </target>
+
+  <target name="compile">
+    <mkdir dir="${class.dir}" />
+    <javac srcdir="${src.dir}" destdir="${class.dir}" classpathref="classpath" includeAntRuntime="false"/>
+    <copy todir="${class.dir}" >
+      <fileset dir="${src.dir}" excludes="**/*.java" />
+    </copy>
+  </target>
+
+  <target name="makejar" depends="compile">
+    <mkdir dir="${jar.dir}" />
+    <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${class.dir}">
+      <manifest>
+        <attribute name="Main-Class" value="${main-class}" />
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="clean-build" depends="clean,makejar" />
+
+  <target name="run" depends="makejar">
+    <java fork="true" classname="${main-class}" >
+      <classpath>
+        <path refid="classpath" />
+        <path location="${jar.dir}/${ant.project.name}.jar" />
+      </classpath>
+      <arg value="-start"/>
+      <arg value="${start}"/>
+      <arg value="-end" />
+      <arg value="${end}" />
+      <arg value="-ticker" />
+      <arg value="${ticker}" />
+    </java>
+  </target>
+
+</project>
