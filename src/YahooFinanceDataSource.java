@@ -65,7 +65,7 @@ public class YahooFinanceDataSource extends InternetDataSource<YahooFinanceStock
 	}
 
 	@Override
-	public YahooFinanceStockRow parseRow(String input) throws ParseException
+	public YahooFinanceStockRow parseRow(String input) throws ParseException, NumberFormatException
 	{
 		YahooFinanceStockRow row = new YahooFinanceStockRow();
 		String[] fields = input.split(",");
